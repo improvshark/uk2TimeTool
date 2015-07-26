@@ -71,7 +71,7 @@ class availability:
     def closedTimeLeft(self):
         setTimeZone(remoteTimeZone)
         now = datetime.datetime.now()
-        if not self.isOpenNow() and self.isOpenToday and now < self.oTime:
+        if not self.isOpenNow() and self.isOpenToday() and now < self.oTime:
             return self.oTime - now
         elif not self.isOpenNow():
             return self.getNextOpenDateTime() - now
