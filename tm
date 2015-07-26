@@ -8,11 +8,11 @@ salesOpenTime="4:00"
 #salesCloseTime="5.30pm"
 #salesClosedDaysOfWeek=[5,6] # 0=monday 6 = sunday
 salesCloseTime="23:30"
-salesClosedDaysOfWeek=[5,6] # 0=monday 6 = sunday
+salesClosedDaysOfWeek=[] # 0=monday 6 = sunday
 
-billingOpenTime="9:00"
-billingCloseTime="17:00"
-billingClosedDaysOfWeek=[5,6]
+billingOpenTime="4:00"
+billingCloseTime="23:30"
+billingClosedDaysOfWeek=[]
 # end config
 
 import time
@@ -91,7 +91,7 @@ def getTimeDiff():
     return there-here
 
 salesA = availability(salesOpenTime,salesCloseTime,salesClosedDaysOfWeek)
-billingA = availability(salesOpenTime,salesCloseTime,salesClosedDaysOfWeek)
+billingA = availability(billingOpenTime,billingCloseTime,billingClosedDaysOfWeek)
 test = availability("8:00","6:00",[])
 
 
@@ -112,3 +112,16 @@ print("timeDiff: " + str(getTimeDiff()))
 
 print("Sales \t\topens: %s closes: %s"%(salesOpenTime,salesCloseTime) )
 print("Billing \topens: %s closes: %s"%(billingOpenTime,billingCloseTime) )
+
+
+setTimeZone(remoteTimeZone)
+if billingA.isOpenNow():
+    print ("Billing is "+bcolors.green+"OPEN"+bcolors.white+" for %s."%str(billingA.closedTimeLeft()).split('.', 2)[0])
+else:
+    print ("Billing is "+bcolors.red+"CLOSED"+bcolors.white+" for %s."%str(billingA.closedTimeLeft()).split('.', 2)[0])
+
+setTimeZone(remoteTimeZone)
+if salesA.isOpenNow():
+    print ("Sales is "+bcolors.green+"OPEN"+bcolors.white+" for %s."%str(salesA.closedTimeLeft()).split('.', 2)[0])
+else:
+    print ("Sales is "+bcolors.red+"CLOSED"+bcolors.white+" for %s."%str(salesA.closedTimeLeft()).split('.', 2)[0])
