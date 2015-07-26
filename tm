@@ -80,7 +80,7 @@ class availability:
 
 
 def printTime():
-    print (time.strftime("%I:%M:%S%p %Y  "+bcolors.purple+"-%Z"+bcolors.white))
+    print (time.strftime("%x    %I:%M:%S%p %Y  "+bcolors.purple+"-%Z"+bcolors.white))
 def getTimeDiff():
     setTimeZone(localTimeZone)
     here=datetime.datetime.now()
@@ -92,64 +92,16 @@ salesA = availability(salesOpenTime,salesCloseTime,salesClosedDaysOfWeek)
 billingA = availability(salesOpenTime,salesCloseTime,salesClosedDaysOfWeek)
 test = availability("8:00","6:00",[])
 
-import argparse
-from sys import argv
 
-parser = argparse.ArgumentParser(description='A uk2 time tool.')
-
-parser.add_argument('time', help="Convert given time in the format XX:XX/XX:XXam from local time to remote time.", nargs='?')
-
-parser.add_argument('-H','--hours', help="display the hours for sales and billing in  %s time"%remoteTimeZone, action='store_true')
-parser.add_argument('-r','--remote', help="display the %s time"%remoteTimeZone, action='store_true')
-parser.add_argument('-l','--local', help="display the %s time"%localTimeZone, action='store_true')
-parser.add_argument('-s','--sales', help="Display if sales is open/closed and how long till close/open.", action='store_true')
-parser.add_argument('-b','--billing', help="Display if billing is open/closed and how long till close/open.", action='store_true')
-parser.add_argument('-a','--all', help="Display all options", action='store_true')
-args = parser.parse_args()
-
-import re # regex
-army = re.compile('^((00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23)[:]?[0-5]\d)$')
-reg = re.compile('^(([0-1])?\d[:][0-5]\d(am|pm))$')
-
+setTimeZone(localTimeZone)
+here=datetime.datetime.now()
+printTime()
 setTimeZone(remoteTimeZone)
-if args.time and reg.match(args.time):
-    newTime = datetime.datetime.strptime(args.time,"%I:%M%p")-getTimeDiff()
-    print(newTime.strftime("%I:%M%p")+" "+remoteTimeZone)
-elif args.time and army.match(args.time):
-    newTime = datetime.datetime.strptime(args.time,"%H:%M")-getTimeDiff()
-    print(newTime.strftime("%H:%M")+" "+remoteTimeZone)
-elif args.time:
-    print (' !bad Time formating >'+args.time  )
-if args.all:
-    args.local = True
-    args.remote = True
-    args.sales = True
-    args.billing = True
+there=datetime.datetime.now()
+printTime()
 
-if args.remote:
-    setTimeZone(remoteTimeZone)
-    printTime()
-if args.local:
-    setTimeZone(localTimeZone)
-    printTime()
-    setTimeZone(remoteTimeZone)
-if args.billing:
-    setTimeZone(remoteTimeZone)
-    if salesA.isOpenNow():
-        print ("Billing is "+bcolors.green+"OPEN"+bcolors.white+" for %s."%str(billingA.closedTimeLeft()).split('.', 2)[0])
-    else:
-        print ("Billing is "+bcolors.red+"CLOSED"+bcolors.white+" for %s."%str(billingA.closedTimeLeft()).split('.', 2)[0])
-if args.sales:
-    setTimeZone(remoteTimeZone)
-    if salesA.isOpenNow():
-        print ("Sales is "+bcolors.green+"OPEN"+bcolors.white+" for %s."%str(salesA.closedTimeLeft()).split('.', 2)[0])
-    else:
-        print ("Sales is "+bcolors.red+"CLOSED"+bcolors.white+" for %s."%str(salesA.closedTimeLeft()).split('.', 2)[0])
-if args.hours:
-    print("Sales \t\topens: %s closes: %s"%(salesOpenTime,salesCloseTime) )
-    print("Billing \topens: %s closes: %s"%(billingOpenTime,billingCloseTime) )
+print ('open today: ' + str(salesA.isOpenToday()))
+print ('sales is ' + str(salesA.isOpenNow()))
+print ('billing is ' + str(billingA.isOpenNow()))
 
-# if no arguments
-if len(argv) <= 1:
-    setTimeZone(remoteTimeZone)
-    printTime()
+print("timeDiff: " + str(getTimeDiff()))
