@@ -8,7 +8,7 @@ salesOpenTime="4:00"
 #salesCloseTime="5.30pm"
 #salesClosedDaysOfWeek=[5,6] # 0=monday 6 = sunday
 salesCloseTime="23:30"
-salesClosedDaysOfWeek=[] # 0=monday 6 = sunday
+salesClosedDaysOfWeek=[5,6] # 0=monday 6 = sunday
 
 billingOpenTime="4:00"
 billingCloseTime="23:30"
@@ -59,6 +59,7 @@ class availability:
         now = datetime.datetime.now()
         return self.isOpenToday() and now >= self.oTime and now <= self.cTime
     def openTimeLeft(self):
+        setTimeZone(remoteTimeZone)
         if self.isOpenNow():
             return self.cTime - datetime.datetime.now()
         else:
@@ -70,6 +71,7 @@ class availability:
             day += oneDay
         return day
     def closedTimeLeft(self):
+        setTimeZone(remoteTimeZone)
         now = datetime.datetime.now()
         if not self.isOpenNow() and self.isOpenToday and now < self.oTime:
             return self.oTime - now
@@ -116,12 +118,12 @@ print("Billing \topens: %s closes: %s"%(billingOpenTime,billingCloseTime) )
 
 setTimeZone(remoteTimeZone)
 if billingA.isOpenNow():
-    print ("Billing is "+bcolors.green+"OPEN"+bcolors.white+" for %s."%str(billingA.closedTimeLeft()).split('.', 2)[0])
+    print ("Billing is "+bcolors.green+"OPEN"+bcolors.white+" for %s."%str(billingA.openTimeLeft()).split('.', 2)[0])
 else:
     print ("Billing is "+bcolors.red+"CLOSED"+bcolors.white+" for %s."%str(billingA.closedTimeLeft()).split('.', 2)[0])
 
 setTimeZone(remoteTimeZone)
 if salesA.isOpenNow():
-    print ("Sales is "+bcolors.green+"OPEN"+bcolors.white+" for %s."%str(salesA.closedTimeLeft()).split('.', 2)[0])
+    print ("Sales is "+bcolors.green+"OPEN"+bcolors.white+" for %s."%str(salesA.openTimeLeft()).split('.', 2)[0])
 else:
     print ("Sales is "+bcolors.red+"CLOSED"+bcolors.white+" for %s."%str(salesA.closedTimeLeft()).split('.', 2)[0])
