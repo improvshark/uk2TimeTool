@@ -4,11 +4,9 @@
 localTimeZone="US/Mountain"
 remoteTimeZone="Europe/London"
 
-salesOpenTime="4:00"
-#salesCloseTime="5.30pm"
-#salesClosedDaysOfWeek=[5,6] # 0=monday 6 = sunday
-salesCloseTime="23:30"
-salesClosedDaysOfWeek=[] # 0=monday 6 = sunday
+salesOpenTime="9:00"
+salesCloseTime="17:30"
+salesClosedDaysOfWeek=[5,6] # 0=monday 6 = sunday
 
 billingOpenTime="9:00"
 billingCloseTime="17:00"
@@ -52,12 +50,14 @@ class availability:
                 return False
         return True
     def isOpenToday(self):
+        setTimeZone(remoteTimeZone)
         return self.isOpenOnDay(datetime.date.today())
     def isOpenNow(self):
         setTimeZone(remoteTimeZone)
         now = datetime.datetime.now()
         return self.isOpenToday() and now >= self.oTime and now <= self.cTime
     def openTimeLeft(self):
+        setTimeZone(remoteTimeZone)
         if self.isOpenNow():
             return self.cTime - datetime.datetime.now()
         else:
@@ -69,6 +69,7 @@ class availability:
             day += oneDay
         return day
     def closedTimeLeft(self):
+        setTimeZone(remoteTimeZone)
         now = datetime.datetime.now()
         if not self.isOpenNow() and self.isOpenToday and now < self.oTime:
             return self.oTime - now
@@ -80,7 +81,8 @@ class availability:
 
 
 def printTime():
-    print (time.strftime("%I:%M:%S%p %Y  "+bcolors.purple+"-%Z"+bcolors.white))
+    #print (time.strftime("%x    %I:%M:%S%p %Y  "+bcolors.purple+"-%Z"+bcolors.white))
+    print (time.strftime("%x    %H:%M:%S %Y  "+bcolors.purple+"-%Z"+bcolors.white))
 def getTimeDiff():
     setTimeZone(localTimeZone)
     here=datetime.datetime.now()
@@ -89,8 +91,7 @@ def getTimeDiff():
     return there-here
 
 salesA = availability(salesOpenTime,salesCloseTime,salesClosedDaysOfWeek)
-billingA = availability(salesOpenTime,salesCloseTime,salesClosedDaysOfWeek)
-test = availability("8:00","6:00",[])
+billingA = availability(billingOpenTime,billingCloseTime,billingClosedDaysOfWeek)
 
 import argparse
 from sys import argv
@@ -125,24 +126,25 @@ if args.all:
     args.remote = True
     args.sales = True
     args.billing = True
-
-if args.remote:
-    setTimeZone(remoteTimeZone)
-    printTime()
+    
 if args.local:
     setTimeZone(localTimeZone)
     printTime()
     setTimeZone(remoteTimeZone)
+if args.remote:
+    setTimeZone(remoteTimeZone)
+    printTime()
+
 if args.billing:
     setTimeZone(remoteTimeZone)
-    if salesA.isOpenNow():
-        print ("Billing is "+bcolors.green+"OPEN"+bcolors.white+" for %s."%str(billingA.closedTimeLeft()).split('.', 2)[0])
+    if billingA.isOpenNow():
+        print ("Billing is "+bcolors.green+"OPEN"+bcolors.white+" for %s."%str(billingA.openTimeLeft()).split('.', 2)[0])
     else:
         print ("Billing is "+bcolors.red+"CLOSED"+bcolors.white+" for %s."%str(billingA.closedTimeLeft()).split('.', 2)[0])
 if args.sales:
     setTimeZone(remoteTimeZone)
     if salesA.isOpenNow():
-        print ("Sales is "+bcolors.green+"OPEN"+bcolors.white+" for %s."%str(salesA.closedTimeLeft()).split('.', 2)[0])
+        print ("Sales is "+bcolors.green+"OPEN"+bcolors.white+" for %s."%str(salesA.openTimeLeft()).split('.', 2)[0])
     else:
         print ("Sales is "+bcolors.red+"CLOSED"+bcolors.white+" for %s."%str(salesA.closedTimeLeft()).split('.', 2)[0])
 if args.hours:
