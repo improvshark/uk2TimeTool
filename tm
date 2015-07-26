@@ -126,7 +126,7 @@ if args.all:
     args.remote = True
     args.sales = True
     args.billing = True
-    
+
 if args.local:
     setTimeZone(localTimeZone)
     printTime()
@@ -148,8 +148,12 @@ if args.sales:
     else:
         print ("Sales is "+bcolors.red+"CLOSED"+bcolors.white+" for %s."%str(salesA.closedTimeLeft()).split('.', 2)[0])
 if args.hours:
-    print("Sales \t\topens: %s closes: %s"%(salesOpenTime,salesCloseTime) )
-    print("Billing \topens: %s closes: %s"%(billingOpenTime,billingCloseTime) )
+    so = datetime.datetime.strptime(salesOpenTime,"%H:%M").strftime("%I:%M%p") # converting to different format after parsing
+    sc = datetime.datetime.strptime(salesCloseTime,"%H:%M").strftime("%I:%M%p")
+    bo = datetime.datetime.strptime(billingOpenTime,"%H:%M").strftime("%I:%M%p")
+    bc = datetime.datetime.strptime(billingCloseTime,"%H:%M").strftime("%I:%M%p")
+    print("Sales \t\topens: %s closes: %s"%(so,sc) )
+    print("Billing \topens: %s closes: %s"%(bo,bc) )
 
 # if no arguments
 if len(argv) <= 1:
