@@ -8,7 +8,7 @@ salesOpenTime="4:00"
 #salesCloseTime="5.30pm"
 #salesClosedDaysOfWeek=[5,6] # 0=monday 6 = sunday
 salesCloseTime="23:30"
-salesClosedDaysOfWeek=[] # 0=monday 6 = sunday
+salesClosedDaysOfWeek=[5,6] # 0=monday 6 = sunday
 
 billingOpenTime="9:00"
 billingCloseTime="17:00"
@@ -52,6 +52,7 @@ class availability:
                 return False
         return True
     def isOpenToday(self):
+        setTimeZone(remoteTimeZone)
         return self.isOpenOnDay(datetime.date.today())
     def isOpenNow(self):
         setTimeZone(remoteTimeZone)
@@ -80,7 +81,8 @@ class availability:
 
 
 def printTime():
-    print (time.strftime("%x    %I:%M:%S%p %Y  "+bcolors.purple+"-%Z"+bcolors.white))
+    #print (time.strftime("%x    %I:%M:%S%p %Y  "+bcolors.purple+"-%Z"+bcolors.white))
+    print (time.strftime("%x    %H:%M:%S %Y  "+bcolors.purple+"-%Z"+bcolors.white))
 def getTimeDiff():
     setTimeZone(localTimeZone)
     here=datetime.datetime.now()
@@ -100,8 +102,13 @@ setTimeZone(remoteTimeZone)
 there=datetime.datetime.now()
 printTime()
 
-print ('open today: ' + str(salesA.isOpenToday()))
+print ('sales open today: ' + str(salesA.isOpenToday()))
+print ('billing open today: ' + str(billingA.isOpenToday()))
 print ('sales is ' + str(salesA.isOpenNow()))
 print ('billing is ' + str(billingA.isOpenNow()))
 
 print("timeDiff: " + str(getTimeDiff()))
+
+
+print("Sales \t\topens: %s closes: %s"%(salesOpenTime,salesCloseTime) )
+print("Billing \topens: %s closes: %s"%(billingOpenTime,billingCloseTime) )
