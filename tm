@@ -109,7 +109,7 @@ parser.add_argument('-a','--all', help="Display all options", action='store_true
 args = parser.parse_args()
 
 import re # regex
-army = re.compile('^((00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23)[:]?[0-5]\d)$')
+army = re.compile('^((00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23):[0-5]\d)$')
 reg = re.compile('^(([0-1])?\d[:][0-5]\d(am|pm))$')
 
 setTimeZone(remoteTimeZone)
