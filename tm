@@ -126,7 +126,7 @@ if args.all:
     args.remote = True
     args.sales = True
     args.billing = True
-
+    args.hours = True
 if args.local:
     setTimeZone(localTimeZone)
     printTime()
