@@ -6,7 +6,7 @@ remoteTimeZone="Europe/London"
 
 salesOpenTime="9:00"
 salesCloseTime="17:30"
-salesClosedDaysOfWeek=[5,6] # 0=monday 6 = sunday
+salesClosedDaysOfWeek=[5,6] # 0=monday 6= sunday
 
 billingOpenTime="9:00"
 billingCloseTime="17:00"
@@ -100,9 +100,9 @@ parser = argparse.ArgumentParser(description='A uk2 time tool.')
 
 parser.add_argument('time', help="Convert given time in the format XX:XX/XX:XXam from local time to remote time.", nargs='?')
 
-parser.add_argument('-H','--hours', help="display the hours for sales and billing in  %s time"%remoteTimeZone, action='store_true')
-parser.add_argument('-r','--remote', help="display the %s time"%remoteTimeZone, action='store_true')
-parser.add_argument('-l','--local', help="display the %s time"%localTimeZone, action='store_true')
+parser.add_argument('-H','--hours', help="Display the hours for sales and billing in  %s time"%remoteTimeZone, action='store_true')
+parser.add_argument('-r','--remote', help="Display the %s time"%remoteTimeZone, action='store_true')
+parser.add_argument('-l','--local', help="Display the %s time"%localTimeZone, action='store_true')
 parser.add_argument('-s','--sales', help="Display if sales is open/closed and how long till close/open.", action='store_true')
 parser.add_argument('-b','--billing', help="Display if billing is open/closed and how long till close/open.", action='store_true')
 parser.add_argument('-a','--all', help="Display all options", action='store_true')
@@ -114,10 +114,10 @@ reg = re.compile('^(([0-1])?\d[:][0-5]\d(am|pm))$')
 
 setTimeZone(remoteTimeZone)
 if args.time and reg.match(args.time):
-    newTime = datetime.datetime.strptime(args.time,"%I:%M%p")-getTimeDiff()
+    newTime = datetime.datetime.strptime(args.time,"%I:%M%p")+getTimeDiff()
     print(newTime.strftime("%I:%M%p")+" "+remoteTimeZone)
 elif args.time and army.match(args.time):
-    newTime = datetime.datetime.strptime(args.time,"%H:%M")-getTimeDiff()
+    newTime = datetime.datetime.strptime(args.time,"%H:%M")+getTimeDiff()
     print(newTime.strftime("%H:%M")+" "+remoteTimeZone)
 elif args.time:
     print (' !bad Time formating >'+args.time  )
