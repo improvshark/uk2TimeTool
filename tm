@@ -4,15 +4,15 @@
 localTimeZone="US/Mountain"
 remoteTimeZone="Europe/London"
 
-salesOpenTime="4:00"
+salesOpenTime="9:00"
 #salesCloseTime="5.30pm"
 #salesClosedDaysOfWeek=[5,6] # 0=monday 6 = sunday
-salesCloseTime="23:30"
-salesClosedDaysOfWeek=[5,6] # 0=monday 6 = sunday
+salesCloseTime="17:30"
+salesClosedDaysOfWeek=[] # 0=monday 6 = sunday
 
-billingOpenTime="4:00"
-billingCloseTime="23:30"
-billingClosedDaysOfWeek=[]
+billingOpenTime="9:00"
+billingCloseTime="17:00"
+billingClosedDaysOfWeek=[5,6]
 # end config
 
 import time
@@ -65,6 +65,7 @@ class availability:
         else:
             return 0
     def getNextOpenDateTime(self):
+        setTimeZone(remoteTimeZone)
         oneDay = datetime.timedelta(1)
         day = self.oTime + oneDay
         while len(self.closedDaysOfWeek) > 0 and not self.isOpenOnDay(day):
@@ -73,7 +74,7 @@ class availability:
     def closedTimeLeft(self):
         setTimeZone(remoteTimeZone)
         now = datetime.datetime.now()
-        if not self.isOpenNow() and self.isOpenToday and now < self.oTime:
+        if not self.isOpenNow() and self.isOpenToday() and now < self.oTime:
             return self.oTime - now
         elif not self.isOpenNow():
             return self.getNextOpenDateTime() - now
